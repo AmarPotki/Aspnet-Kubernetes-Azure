@@ -1,0 +1,57 @@
+az login
+--
+Create a resource group
+az group create --name Asp_K8s --location germanywestcentral
+
+--
+Create an Azure Container Registry
+az acr create --resource-group Asp_K8s --name AmarRegistery --sku Basic
+--
+Enable Admin Account for ACR Pull
+az acr update -n AmarRegistery --admin-enabled true
+Log in to the container registry
+az acr login --name AmarRegistery
+
+Tag a container image
+
+get the login server address
+az acr list --resource-group Asp_K8s --query "[].{acrLoginServer:loginServer}" --output table
+amarregistery.azurecr.io
+--
+Tag your images
+
+docker tag shoppingapi:latest amarregistery.azurecr.io/shoppingapi:v1
+docker tag shoppingclient:latest amarregistery.azurecr.io/shoppingclient:v1
+
+Push images to registry
+
+docker push amarregistery.azurecr.io/shoppingapi:v1
+docker push amarregistery.azurecr.io/shoppingclient:v1
+
+List images in registry
+az acr repository list --name amarregistery --output table
+
+Create AKS cluster with attaching ACR
+az aks create --resource-group Asp_K8s --name AmarAKSCluster --node-count 1 --generate-ssh-keys --attach-acr amarregistery
+
+Install the Kubernetes CLI
+az aks install-cli
+--
+Connect to cluster using kubectl
+az aks get-credentials --resource-group Asp_K8s --name AmarAKSCluster
+
+---
+Create secret docker registry
+kubectl create secret docker-registry acr-secret --docker-server=amarregistery.azurecr.io --docker-username=AmarRegistery --docker-password= --docker-email=amar.potki@hotmail.com
+
+check 
+kubectl get secret
+
+kubectl apply -f .\aks\
+
+For Finding Error
+kubectl get pod
+kubectl discribe pod podname
+
+And see event section
+
