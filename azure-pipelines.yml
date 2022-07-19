@@ -17,6 +17,7 @@ variables:
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'amarregistery580726bd-auth'
+  k8sNamespace: 'shoppingapi-deployment'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
