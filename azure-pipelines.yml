@@ -17,7 +17,6 @@ variables:
   dockerfilePath: '**/Dockerfile'
   tag: '$(Build.BuildId)'
   imagePullSecret: 'amarregistery580726bd-auth'
-  k8sNamespace: 'shoppingapi-deployment'
 
   # Agent VM image name
   vmImageName: 'ubuntu-latest'
@@ -55,7 +54,7 @@ stages:
     displayName: Deploy
     pool:
       vmImage: $(vmImageName)
-    environment: 'aspnetrunrundevops.default'
+    environment: 'AmarPotkiAspnetKubernetesAzure.default'
     strategy:
       runOnce:
         deploy:
